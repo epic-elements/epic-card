@@ -7,7 +7,9 @@
     "paper-card": "PolymerElements/paper-card#^1.1.1",
     "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.3.1",
     "iron-collapse": "PolymerElements/iron-collapse#^1.1.1",
-    "epic-header": "epic-elements/epic-header"
+    "epic-header": "epic-elements/epic-header",
+    "epic-styles": "epic-elements/epic-styles",
+    "epic-button": "epic-elements/epic-button"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
