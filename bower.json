@@ -9,7 +9,8 @@
     "iron-collapse": "PolymerElements/iron-collapse#^1.1.1",
     "epic-header": "epic-elements/epic-header",
     "epic-styles": "epic-elements/epic-styles",
-    "epic-button": "epic-elements/epic-button"
+    "epic-button": "epic-elements/epic-button",
+    "epic-container": "epic-elements/epic-container"
   },
   "devDependencies": {
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",

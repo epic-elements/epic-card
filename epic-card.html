@@ -2,7 +2,7 @@
 <link rel="import" href="../paper-card/paper-card.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../epic-styles/epic-styles.html">
-<link rel="import" href="../epic-header/epic-header.html">
+<link rel="import" href="../epic-header/epic-header.es6.html">
 <link rel="import" href="../epic-button/epic-button.html">
 <!-- <link rel="import" href="../iron-collapse/iron-collapse.html"> -->
 
@@ -78,8 +78,17 @@
           };
 
           --epic-header-heading: {
-          }
+          };
 
+
+
+      }
+
+      epic-header {
+          --epic-container: {
+                    /*padding-top: 0;*/
+                    padding-bottom: 0;
+            };
       }
 
       :host[elevation="0"] {
@@ -141,6 +150,10 @@
       paper-card > .body{
           @apply(--layout-flex-auto);
       }
+
+      .actions {
+          margin-bottom: calc(var(--epic-baseline) * -1);
+      }
     </style>
 
     <!-- <template is="dom-if" if="[[!disableContentClicks]]"> -->
@@ -160,18 +173,24 @@
                         </svg>
                 </div>
                 </template> -->
-    <epic-header id="header" level="4">
-        <div header>[[heading]]</div>
-        <h2 subheader>[[subheading]]</h2>
+    <epic-header id="header" class="header" level="3">
+        <div heading>[[heading]]</div>
+        <div subheading>[[subheading]]</div>
     </epic-header>
-    <div id="body" class="body">
+    <epic-container class="card-content" elevation="0">
+        <content select=".content"></content>
+    </epic-container>
+    <epic-container class="card-actions" elevation="0">
+        <content select=".actions"></content>
+    </epic-container>
+<!--     <div id="body" class="body"> -->
         <!-- <iron-collapse> -->
-      <content select=".card-content"></content>
+
       <!-- </iron-collapse> -->
-  </div>
-    <div id="actions" class="actions">
+<!--   </div> -->
+<!--     <div id="actions" class="actions">
       <content select=".card-actions"></content>
-  </div>
+  </div> -->
         <!-- <content></content> -->
     </paper-card>
     <!-- <template is="dom-if" if="[[!disableContentClicks]]"> -->
