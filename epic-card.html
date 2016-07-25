@@ -1,0 +1,302 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-card/paper-card.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../epic-styles/epic-styles.html">
+<link rel="import" href="../epic-header/epic-header.html">
+<link rel="import" href="../epic-button/epic-button.html">
+<!-- <link rel="import" href="../iron-collapse/iron-collapse.html"> -->
+
+<dom-module id="epic-card">
+  <template>
+    <style include="epic-styles">
+      :host {
+
+          --epic-card-overlay-width: 100%;
+          --epic-card-overlay-height: auto;
+          /*The background color of the card */
+          /*--paper-card-background-color: var(--epic-card-background-color, #fff);*/
+
+          /* The color of the header text */
+          /*--paper-card-header-color: var(--epic-card-header-color, #fff);*/
+
+          /* Mixin applied to the card header section */
+          --paper-card-header: {
+              margin-bottom: var(--epic-line-height);
+              /*apply(--layout-horizontal);*/
+              @apply(--epic-card-header);
+          };
+
+          /*Mixin applied to the title in the card header section*/
+          --paper-card-header-text: {
+              @apply(--epic-card-header-text);
+          };
+
+          /*Mixin applied to the image in the card header section*/
+          --paper-card-header-image: {
+              @apply(--epic-card-header-image);
+          };
+
+          /*Mixin applied to the text overlapping the image in the card header section*/
+          --paper-card-header-image-text: {
+              @apply(--epic-type-h4);
+              padding: var(--epic-line-height);
+            @apply(--epic-card-header-image-text);
+          };
+
+          /*Mixin applied to the card content section*/
+          --paper-card-content: {
+              @apply(--epic-type-body);
+              padding: 0 var(--epic-line-height);
+              margin-bottom: var(--epic-line-height);
+            /*@apply(--epic-card-content);*/
+          };
+
+          /*Mixin applied to the card action section*/
+          --paper-card-actions: {
+              margin-top: -1px;
+              padding: var(--epic-line-height) var(--epic-line-height) 0;
+            @apply(--epic-card-actions);
+          };
+
+          /*Mixin applied to the card*/
+          --paper-card: {
+            @apply(--epic-card);
+          };
+
+          --iron-image-placeholder: {
+              background-color: white;
+              @apply(--epic-card-image-placeholder);
+          };
+              --epic-header: {
+                  /*padding: 0 var(--epic-line-height);*/
+                  /*margin-bottom: var(--epic-line-height);*/
+              };
+
+          --epic-header-content: {
+              padding: 0 var(--epic-line-height);
+              margin-bottom: var(--epic-line-height);
+          };
+
+          --epic-header-heading: {
+          }
+
+      }
+
+      :host[elevation="0"] {
+        /*Mixin applied to the card action section*/
+          --paper-card-actions: {
+              margin-top: 0;
+              border-top:0;
+              padding: 0 var(--epic-line-height) 0;
+              @apply(--epic-card-actions);
+          };
+      }
+
+      :host[type="video"] {
+          --paper-card-header: {
+              margin-bottom: var(--epic-line-height);
+
+              padding-bottom: calc((100% * (9/16)) - 1.5%);
+              /*@apply(--epic-card-header);*/
+          };
+
+          --paper-card-header-image: {
+              @apply(--layout-vertical);
+              @apply(--layout-center-center);
+
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+
+              /*height: calc(10/0vw * (9/16));*/
+              /*max-width:100%;*/
+          }
+
+
+
+
+
+
+
+      }
+      a {
+          color: inherit;
+          text-decoration:none;
+            min-height: 100%;
+            max-height: 100%;
+            display: flex;
+      }
+
+      paper-card {
+          @apply(--layout-vertical);
+
+      }
+
+      paper-card > *{
+          @apply(--layout-flex-none);
+      }
+
+      paper-card > .body{
+          @apply(--layout-flex-auto);
+      }
+    </style>
+
+    <!-- <template is="dom-if" if="[[!disableContentClicks]]"> -->
+    <a href="[[href]]">
+    <!-- </template> -->
+    <paper-card image="[[image]]"
+                preload-image="[[preloadImage]]"
+                fade-image="[[fadeImage]]"
+                elevation="{{elevation}}"
+                animated-shadow="[[animatedShadow]]">
+                <!-- <template is="dom-if" if="[[_isVideoType(type)]]">
+                <div class="overlay">
+                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewbox="0 0 72 72" style="enable-background:new 0 0 72 72;" alt="play video">
+                            <g>
+                                <polygon points="0,0 72,36 0,72" />
+                            </g>
+                        </svg>
+                </div>
+                </template> -->
+    <epic-header id="header" level="4">
+        <div header>[[heading]]</div>
+        <h2 subheader>[[subheading]]</h2>
+    </epic-header>
+    <div id="body" class="body">
+        <!-- <iron-collapse> -->
+      <content select=".card-content"></content>
+      <!-- </iron-collapse> -->
+  </div>
+    <div id="actions" class="actions">
+      <content select=".card-actions"></content>
+  </div>
+        <!-- <content></content> -->
+    </paper-card>
+    <!-- <template is="dom-if" if="[[!disableContentClicks]]"> -->
+    </a>
+    <!-- </template> -->
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'epic-card',
+
+      properties: {
+          /**
+           * The title of the card.
+           */
+
+           type: {
+             type: String,
+             value: '',
+             notify: true,
+             reflectToAttribute:true,
+             observer: '_typeChanged'
+           },
+
+           href: {
+             type: String,
+             value: '#',
+             notify: true
+           },
+           disableContentClicks:{
+            type: Boolean,
+            value: true,
+            notify:true,
+            readOnly: true,
+            reflectToAttribute:true
+           },
+          heading: {
+            type: String,
+            value: '',
+            notify: true
+          },
+
+          subheading: {
+            type: String,
+            value: '',
+            notify: true
+          },
+
+          overlayHeader: {
+            type: Boolean,
+            value: false,
+            notify: true
+        },
+
+          /**
+           * The url of the title image of the card.
+           */
+          image: {
+            type: String,
+            value: '',
+            notify: true
+          },
+
+          /**
+           * When `true`, any change to the image url property will cause the
+           * `placeholder` image to be shown until the image is fully rendered.
+           */
+          preloadImage: {
+            type: Boolean,
+            value: false,
+            notify: true
+          },
+
+          /**
+           * When `preloadImage` is true, setting `fadeImage` to true will cause the
+           * image to fade into place.
+           */
+          fadeImage: {
+            type: Boolean,
+            value: false,
+            notify: true
+          },
+
+          /**
+           * The z-depth of the card, from 0-5.
+           */
+          elevation: {
+            type: Number,
+            value: 0,
+            notify:true,
+            reflectToAttribute: true
+          },
+
+          /**
+           * Set this to true to animate the card shadow when setting a new
+           * `z` value.
+           */
+          animatedShadow: {
+            type: Boolean,
+            value: false
+          }
+      },
+
+      listeners: {
+      },
+
+      _handleTap: function(e){
+
+      },
+      _isVideoType: function(type){
+        //   console.log(type);
+          return type === 'video';
+      },
+
+      _typeChanged: function(type){
+        //   if(type === 'video'){
+
+            //   this.customStyle['--epic-card-overlay-width'] = image.width;
+            //   this.customStyle['--epic-card-overlay-height'] = image.height;
+
+            //   this.updateStyles();
+        //   }
+      }
+
+    });
+  </script>
+</dom-module>
