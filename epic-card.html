@@ -21,24 +21,33 @@
 
           /* Mixin applied to the card header section */
           --paper-card-header: {
-              margin-bottom: var(--epic-baseline);
-              /*apply(--layout-horizontal);*/
+              padding: 0;
+              margin: 0;
               @apply(--epic-card-header);
           };
 
           /*Mixin applied to the title in the card header section*/
           --paper-card-header-text: {
+              @apply(--epic-type-h4);
+              @apply(--epic-type-h5);
+              color: var(--epic-header-text-color, inherit);
+              padding: var(--epic-baseline);
+              margin: 0;
+              margin-bottom: 0;
               @apply(--epic-card-header-text);
           };
 
           /*Mixin applied to the image in the card header section*/
           --paper-card-header-image: {
+              display: block;
               @apply(--epic-card-header-image);
           };
 
           /*Mixin applied to the text overlapping the image in the card header section*/
           --paper-card-header-image-text: {
               @apply(--epic-type-h4);
+              @apply(--epic-type-h5);
+              color: var(--epic-header-text-color, inherit);
               padding: var(--epic-baseline);
             @apply(--epic-card-header-image-text);
           };
@@ -102,26 +111,7 @@
       }
 
       :host[type="video"] {
-          --paper-card-header: {
-              margin-bottom: var(--epic-line-height);
 
-              padding-bottom: calc((100% * (9/16)) - 1.5%);
-              /*@apply(--epic-card-header);*/
-          };
-
-          --paper-card-header-image: {
-              @apply(--layout-vertical);
-              @apply(--layout-center-center);
-
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-
-              /*height: calc(10/0vw * (9/16));*/
-              /*max-width:100%;*/
-          }
 
 
 
@@ -157,13 +147,33 @@
     </style>
 
     <!-- <template is="dom-if" if="[[!disableContentClicks]]"> -->
-    <a href="[[href]]">
+    <!-- <a href="[[href]]"> -->
     <!-- </template> -->
-    <paper-card image="[[image]]"
-                preload-image="[[preloadImage]]"
-                fade-image="[[fadeImage]]"
-                elevation="{{elevation}}"
+    <paper-card style="margin: 20px" image="[[coverImage]]"
+    heading="[[overlayHeading]]" elevation="{{elevation}}"
                 animated-shadow="[[animatedShadow]]">
+<template is="dom-if" if="[[!headingOverImage]]">
+                <div class="card-content">
+
+                        <epic-header id="epicCardHeader" level="3">
+                            <div heading>[[heading]]</div>
+                            <div subheading>[[subheading]]</div>
+                        </epic-header>
+
+                </div>
+                </template>
+                <div class="card-content">
+                    <epic-container class="card-content" elevation="0">
+                        stuff
+                    </epic-container>
+                </div>
+              <div class="card-actions">
+                  <epic-container class="card-content" elevation="0">
+                      <!-- <paper-button>Some action</paper-button> -->
+                      <epic-button expand href="[[item.fields.slug]]"  on-tap="handleClick">Some action</epic-button>
+                  </epic-container>
+
+              </div>
                 <!-- <template is="dom-if" if="[[_isVideoType(type)]]">
                 <div class="overlay">
                         <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewbox="0 0 72 72" style="enable-background:new 0 0 72 72;" alt="play video">
@@ -173,16 +183,13 @@
                         </svg>
                 </div>
                 </template> -->
-    <epic-header id="header" class="header" level="3">
-        <div heading>[[heading]]</div>
-        <div subheading>[[subheading]]</div>
-    </epic-header>
-    <epic-container class="card-content" elevation="0">
-        <content select=".content"></content>
-    </epic-container>
-    <epic-container class="card-actions" elevation="0">
+
+    <!-- <epic-container class="card-content" elevation="0">
+        stuff
+    </epic-container> -->
+    <!-- <epic-container class="card-actions" elevation="0">
         <content select=".actions"></content>
-    </epic-container>
+    </epic-container> -->
 <!--     <div id="body" class="body"> -->
         <!-- <iron-collapse> -->
 
@@ -194,7 +201,7 @@
         <!-- <content></content> -->
     </paper-card>
     <!-- <template is="dom-if" if="[[!disableContentClicks]]"> -->
-    </a>
+    <!-- </a> -->
     <!-- </template> -->
   </template>
 
@@ -207,15 +214,16 @@
           /**
            * The title of the card.
            */
-
            type: {
              type: String,
              value: '',
              notify: true,
-             reflectToAttribute:true,
-             observer: '_typeChanged'
-           },
-
+            },
+            headingOverImage: {
+                type: Boolean,
+                value: false,
+                notify: true
+            },
            href: {
              type: String,
              value: '#',
@@ -240,10 +248,12 @@
             notify: true
           },
 
-          overlayHeader: {
-            type: Boolean,
-            value: false,
-            notify: true
+
+
+          overlayHeading: {
+            type: String,
+            notify: true,
+            computed: '_computeOverlayHeading(heading, headingOverImage)'
         },
 
           /**
@@ -252,8 +262,32 @@
           image: {
             type: String,
             value: '',
-            notify: true
-          },
+            notify: true,
+            observer:'_imageChanged'
+            },
+
+          /**
+           * The embed URL for video. Used only with cards with `type=video`
+           */
+          video: {
+            type: String,
+            value: '',
+            notify: true,
+            // observer: '_videoChanged'
+           },
+
+           videoThumbnail: {
+               type: String,
+               notify: true,
+               computed: '_computeVideoThumbnail(type, video)',
+            //    observer:'_videoThumbnailChanged'
+           },
+
+           coverImage: {
+               type: String,
+               notify: true,
+               computed: '_computeCoverImage(type, videoThumbnail)'
+           },
 
           /**
            * When `true`, any change to the image url property will cause the
@@ -280,10 +314,11 @@
            */
           elevation: {
             type: Number,
-            value: 0,
+            value: 5,
             notify:true,
             reflectToAttribute: true
-          },
+        },
+
 
           /**
            * Set this to true to animate the card shadow when setting a new
@@ -294,6 +329,9 @@
             value: false
           }
       },
+
+      observers: [
+      ],
 
       listeners: {
       },
@@ -307,13 +345,52 @@
       },
 
       _typeChanged: function(type){
-        //   if(type === 'video'){
+          if(type === 'video'){
 
             //   this.customStyle['--epic-card-overlay-width'] = image.width;
             //   this.customStyle['--epic-card-overlay-height'] = image.height;
 
             //   this.updateStyles();
-        //   }
+          }
+      },
+
+      _computeOverlayHeading: function(heading, headingOverImage){
+
+          if(!headingOverImage || !heading){
+              return '';
+          } else {
+              return heading;
+          }
+      },
+
+      _computeVideoThumbnail: function(type, video) {
+          if(type != 'video'){
+              return '';
+          }
+
+          if (video.indexOf('youtube.com') !== -1) {
+              videoId = video.match(/(?:.?|)youtube\.com\/(?:embed\/|watch\?v\=)([^\?\v$^]+)/i)[1];
+              thumbnailUrl = '//img.youtube.com/vi/' + videoId + '/hqdefault.jpg';
+              return thumbnailUrl;
+
+          } else if (video.indexOf('vimeo.com') !== -1) {
+              return 'http://placehold.it/500';
+          }
+
+      },
+
+      _computeCoverImage(type, videoThumbnail) {
+          if(this.image){
+              return this.image;
+          }
+
+          if(type === 'video' && videoThumbnail) {
+              return videoThumbnail;
+          }
+      },
+
+      _imageChanged(image, oldImage){
+          console.log(image, oldImage);
       }
 
     });
