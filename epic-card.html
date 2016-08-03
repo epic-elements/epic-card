@@ -4,198 +4,182 @@
 <link rel="import" href="../epic-styles/epic-styles.html">
 <link rel="import" href="../epic-header/epic-header.es6.html">
 <link rel="import" href="../epic-button/epic-button.html">
+<link rel="import" href="../paper-material/paper-material.html">
+<link rel="import" href="../iron-image/iron-image.html">
+<link rel="import" href="../epic-container/epic-container.html">
 <!-- <link rel="import" href="../iron-collapse/iron-collapse.html"> -->
 
 <dom-module id="epic-card">
   <template>
     <style include="epic-styles">
-      :host {
 
-          --epic-card-overlay-width: 100%;
-          --epic-card-overlay-height: auto;
-          /*The background color of the card */
-          /*--paper-card-background-color: var(--epic-card-background-color, #fff);*/
-
-          /* The color of the header text */
-          /*--paper-card-header-color: var(--epic-card-header-color, #fff);*/
-
-          /* Mixin applied to the card header section */
-          --paper-card-header: {
-              margin-bottom: var(--epic-baseline);
-              /*apply(--layout-horizontal);*/
-              @apply(--epic-card-header);
-          };
-
-          /*Mixin applied to the title in the card header section*/
-          --paper-card-header-text: {
-              @apply(--epic-card-header-text);
-          };
-
-          /*Mixin applied to the image in the card header section*/
-          --paper-card-header-image: {
-              @apply(--epic-card-header-image);
-          };
-
-          /*Mixin applied to the text overlapping the image in the card header section*/
-          --paper-card-header-image-text: {
-              @apply(--epic-type-h4);
-              padding: var(--epic-baseline);
-            @apply(--epic-card-header-image-text);
-          };
-
-          /*Mixin applied to the card content section*/
-          --paper-card-content: {
-              @apply(--epic-type-body);
-              padding: 0;
-              margin: 0;
-            /*@apply(--epic-card-content);*/
-          };
-
-          /*Mixin applied to the card action section*/
-          --paper-card-actions: {
-              margin-top: -1px;
-              padding: 0;
-            @apply(--epic-card-actions);
-          };
-
-          /*Mixin applied to the card*/
-          --paper-card: {
-            @apply(--epic-card);
-          };
-
-          --iron-image-placeholder: {
-              background-color: white;
-              @apply(--epic-card-image-placeholder);
-          };
-              --epic-header: {
-                  /*padding: 0 var(--epic-line-height);*/
-                  /*margin-bottom: var(--epic-line-height);*/
-              };
-
-          --epic-header-content: {
-              padding: 0;
-              margin-bottom: var(--epic-baseline);
-          };
-
-          --epic-header-heading: {
-          };
-
-/*         width:100%; */
-
-      }
-
-      epic-header {
-          --epic-container: {
-                    /*padding-top: 0;*/
-                    padding-bottom: 0;
-            };
-      }
-
-      :host[elevation="0"] {
-        /*Mixin applied to the card action section*/
-          --paper-card-actions: {
-              margin-top: 0;
-              border-top:0;
-              padding: 0 var(--epic-line-height) 0;
-              @apply(--epic-card-actions);
-          };
-      }
-
-      :host[type="video"] {
-          --paper-card-header: {
-              margin-bottom: var(--epic-line-height);
-
-              padding-bottom: calc((100% * (9/16)) - 1.5%);
-              /*@apply(--epic-card-header);*/
-          };
-
-          --paper-card-header-image: {
-              @apply(--layout-vertical);
-              @apply(--layout-center-center);
-
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-
-              /*height: calc(10/0vw * (9/16));*/
-              /*max-width:100%;*/
-          }
+        :host {
+            --epic-card-cover-image-16x9: calc(100% * (9/16));
 
 
 
 
+            position: relative;
+            box-sizing: border-box;
+            display: block;
 
+            @apply(--layout-vertical);
 
+        }
 
-      }
-      a {
-          color: inherit;
-          text-decoration:none;
+        .container {
+            position: relative;
+            box-sizing: border-box;
             min-height: 100%;
             max-height: 100%;
+            margin:0;
+            padding:0;
+            display: block;
+            overflow: hidden;
+            @apply(--layout-vertical);
+        }
+
+        .content {
+            @apply(--layout-flex);
+        }
+        .content ::content .box{
+            padding-top:0;
+        }
+
+        .cover {
+            position: relative;
+            box-sizing: border-box;
+            display: block;
+            border-top-left-radius: inherit;
+            border-top-right-radius: inherit;
+            overflow: hidden;
+
+            @apply(--epic-card-header);
+        }
+        .cover .cover-image{
+            position: relative;
+            box-sizing: border-box;
+            display: block;
+            width: var(--epic-cover-image-width, 100%);
+            height: var(--epic-cover-image-height, 100%);
+            --iron-image-width: var(--epic-cover-image-width, 100%);
+            --iron-image-height: var(--epic-cover-image-height, 100%);
+            pointer-events: none;
+            @apply(--epic-card-cover-image);
+        }
+
+        :host[type="video"] .cover,
+        :host[image-aspect-ratio="16:9"] .cover {
+            padding-bottom: var(--epic-card-cover-image-16x9);
+            @apply(--epic-card-video-header);
+        }
+        :host[type="video"] .cover .cover-image,
+        :host[image-aspect-ratio="16:9"] .cover .cover-image {
+            position: absolute;
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+            @apply(--epic-card-video-cover-image);
+        }
+
+        :host[type="video"] .cover .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .2);
+            display: -webkit-flex;
+            display: -ms-flexbox;
             display: flex;
-      }
+            -webkit-flex-flow: row wrap;
+            -ms-flex-flow: row wrap;
+            flex-flow: row wrap;
+            -webkit-justify-content: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-align-items: center;
+            -ms-flex-align: center;
+            align-items: center;
+            transition: .2s ease;
+        }
 
-      paper-card {
-          @apply(--layout-vertical);
+        :host[type="video"] .cover .overlay:hover {
+            background: rgba(0, 0, 0, .5);
+            transition: .2s ease;
+            cursor: pointer;
+        }
 
-      }
+        :host[type="video"] .cover .overlay a {
+            color: white;
+            text-decoration: none;
+            padding: .75em 1.5em;
+            display: inline-block;
+            background: rgba(0, 0, 0, .8);
+            font-size: 1em;
+            transition: .2s ease;
+            text-align: center;
+            border-radius: .75em;
+        }
 
-      paper-card > *{
-          @apply(--layout-flex-none);
-      }
+        :host[type="video"] .cover .overlay svg {
+            width: 1em;
+            height: 1em;
+            margin: 0;
+            display: block;
+        }
 
-      paper-card > .body{
-          @apply(--layout-flex-auto);
-      }
+        :host[type="video"] .cover .overlay svg g {
+            fill: white;
+        }
 
-      .actions {
-          margin-bottom: calc(var(--epic-baseline) * -1);
-      }
+        :host[type="video"] .cover .overlay:hover a {
+            background: var(--epic-card-play-button-hover-background-color, --epic-color-poppy);
+            transition: .2s ease;
+        }
+
+        .actions {
+            border-top: 1px solid var(--epic-card-actions-border-color, --epic-color-aluminum);
+            margin-top: -1px;
+            @apply(--epic-card-actions);
+        }
+    }
+
+
+
+
     </style>
 
-    <!-- <template is="dom-if" if="[[!disableContentClicks]]"> -->
-    <a href="[[href]]">
-    <!-- </template> -->
-    <paper-card image="[[image]]"
-                preload-image="[[preloadImage]]"
-                fade-image="[[fadeImage]]"
-                elevation="{{elevation}}"
-                animated-shadow="[[animatedShadow]]">
-                <!-- <template is="dom-if" if="[[_isVideoType(type)]]">
-                <div class="overlay">
-                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewbox="0 0 72 72" style="enable-background:new 0 0 72 72;" alt="play video">
-                            <g>
-                                <polygon points="0,0 72,36 0,72" />
-                            </g>
-                        </svg>
-                </div>
-                </template> -->
-    <epic-header id="header" class="header" level="3">
-        <div heading>[[heading]]</div>
-        <div subheading>[[subheading]]</div>
-    </epic-header>
-    <epic-container class="card-content" elevation="0">
-        <content select=".content"></content>
-    </epic-container>
-    <epic-container class="card-actions" elevation="0">
-        <content select=".actions"></content>
-    </epic-container>
-<!--     <div id="body" class="body"> -->
-        <!-- <iron-collapse> -->
 
-      <!-- </iron-collapse> -->
-<!--   </div> -->
-<!--     <div id="actions" class="actions">
-      <content select=".card-actions"></content>
-  </div> -->
-        <!-- <content></content> -->
-    </paper-card>
-    <!-- <template is="dom-if" if="[[!disableContentClicks]]"> -->
-    </a>
-    <!-- </template> -->
+
+        <paper-material id="container" class="container" elevation="{{elevation}}">
+            <div id="epicCardCover" class="cover">
+                <iron-image id="coverImage" class="cover-image" src="[[coverImage]]" sizing="[[imageSizing]]" fade-image="[[fadeImage]]" preload-image="[[preloadImage]]" placeholder="[[placeholder]]" position="[[imagePosition]]"></iron-image>
+                <template is="dom-if" if="[[_isVideoType(type)]]">
+                    <div class="overlay">
+                        <a href="[[item.slug]]" class="thumb-link" on-click="handleClick">
+                            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewbox="0 0 72 72" style="enable-background:new 0 0 72 72;" alt="play video">
+                                <g>
+                                    <polygon points="0,0 72,36 0,72" />
+                                </g>
+                            </svg>
+                        </a>
+                    </div>
+                </template>
+            </div>
+            <epic-header id="epicCardHeader" level="3">
+                <div heading>[[heading]]</div>
+                <div subheading>[[subheading]]</div>
+            </epic-header>
+            <epic-container class="content" elevation="0">
+                <content select="[content]"></content>
+                <content select=":not([actions])"></content>
+            </epic-container>
+            <epic-container class="actions" elevation="0">
+              <content select="[actions]"></content>
+            </epic-container>
+        </paper-material>
   </template>
 
   <script>
@@ -207,27 +191,21 @@
           /**
            * The title of the card.
            */
-
            type: {
              type: String,
              value: '',
              notify: true,
-             reflectToAttribute:true,
-             observer: '_typeChanged'
-           },
-
+            },
+            headingOverImage: {
+                type: Boolean,
+                value: false,
+                notify: true
+            },
            href: {
              type: String,
              value: '#',
              notify: true
-           },
-           disableContentClicks:{
-            type: Boolean,
-            value: true,
-            notify:true,
-            readOnly: true,
-            reflectToAttribute:true
-           },
+         },
           heading: {
             type: String,
             value: '',
@@ -240,20 +218,36 @@
             notify: true
           },
 
-          overlayHeader: {
-            type: Boolean,
-            value: false,
-            notify: true
-        },
-
           /**
            * The url of the title image of the card.
            */
           image: {
             type: String,
             value: '',
-            notify: true
-          },
+            notify: true,
+            observer:'_imageChanged'
+            },
+
+          /**
+           * The embed URL for video. Used only with cards with `type=video`
+           */
+          video: {
+            type: String,
+            value: '',
+            notify: true,
+           },
+
+           videoThumbnail: {
+               type: String,
+               notify: true,
+               computed: '_computeVideoThumbnail(type, video)',
+           },
+
+           coverImage: {
+               type: String,
+               notify: true,
+               computed: '_computeCoverImage(type, videoThumbnail)'
+           },
 
           /**
            * When `true`, any change to the image url property will cause the
@@ -261,7 +255,7 @@
            */
           preloadImage: {
             type: Boolean,
-            value: false,
+            value: true,
             notify: true
           },
 
@@ -280,10 +274,29 @@
            */
           elevation: {
             type: Number,
-            value: 0,
+            value: 5,
             notify:true,
             reflectToAttribute: true
-          },
+        },
+
+        imageSizing: {
+            type: String,
+            value: 'cover',
+            notify:true
+        },
+
+        imagePosition: {
+            type: String,
+            value: 'center',
+            notify:true
+        },
+
+        placeholder: {
+            type: String,
+            notify:true,
+            value:''
+        },
+
 
           /**
            * Set this to true to animate the card shadow when setting a new
@@ -295,7 +308,15 @@
           }
       },
 
+      observers: [
+        //   '_setCoverImageSizing(imageSizing, imagePosition, isReady)'
+      ],
+
       listeners: {
+      },
+
+      ready: function(){
+          this.isReady = true;
       },
 
       _handleTap: function(e){
@@ -307,13 +328,64 @@
       },
 
       _typeChanged: function(type){
-        //   if(type === 'video'){
+          if(type === 'video'){
 
             //   this.customStyle['--epic-card-overlay-width'] = image.width;
             //   this.customStyle['--epic-card-overlay-height'] = image.height;
 
             //   this.updateStyles();
-        //   }
+          }
+      },
+
+      _computeOverlayHeading: function(heading, headingOverImage){
+
+          if(!headingOverImage || !heading){
+              return '';
+          } else {
+              return heading;
+          }
+      },
+
+      _setCoverImageSizing: function(imageSizing, imagePosition, isReady) {
+        //   var imageElement = this.$.epicPaperCard.querySelector('iron-image');
+          if(!imageElement) {
+              return;
+          }
+
+          if(imageSizing) {
+              imageElement.sizing = imageSizing;
+          }
+
+          if(imagePosition) {
+              imageElement.position = imagePosition;
+          }
+          return;
+      },
+
+      _computeVideoThumbnail: function(type, video) {
+          if(type != 'video'){
+              return '';
+          }
+
+          if (video.indexOf('youtube.com') !== -1) {
+              videoId = video.match(/(?:.?|)youtube\.com\/(?:embed\/|watch\?v\=)([^\?\v$^]+)/i)[1];
+              thumbnailUrl = '//img.youtube.com/vi/' + videoId + '/hqdefault.jpg';
+              return thumbnailUrl;
+
+          } else if (video.indexOf('vimeo.com') !== -1) {
+              return 'http://placehold.it/500';
+          }
+
+      },
+
+      _computeCoverImage(type, videoThumbnail) {
+          if(this.image){
+              return this.image;
+          }
+
+          if(type === 'video' && videoThumbnail) {
+              return videoThumbnail;
+          }
       }
 
     });
