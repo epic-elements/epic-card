@@ -1,10 +1,11 @@
 {
-  "name": "@mjleitch/epic-card",
+  "name": "epic-card",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:crisper": "crisper --source $npm_package_name.es6.html --html $npm_package_name.html --js $npm_package_name.js"
   },
   "author": "",
   "license": "ISC"
